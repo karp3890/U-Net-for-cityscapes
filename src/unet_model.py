@@ -6,21 +6,18 @@ from tensorflow.python.keras.layers import UpSampling2D
 from tensorflow.python.keras.layers import Conv2DTranspose
 from tensorflow.python.keras.layers import concatenate
 from tensorflow.python.keras.layers import Cropping2D
+from tensorflow.python.keras.layers import Dense
 from constants import *
 
 
-class Unet(Model):
+class Unet():
 
-    def __init__(self):
-        super().__init__()
-        self.inputs= INPUT
-        self.outputs = self.unet_model(INPUT)
+    def unet_model(self,input):
 
-    def unet_model(self,input_layer):
         # (572,572,3) => (568,68,64)
-        first_encoder_layer = self.double_conv(64, input_layer, VALID, "FIRST_ENCODER_LAYER")
+        first_encoder_layer = self.double_conv(64,input, VALID, "FIRST_ENCODER_LAYER")
         #  (568,68,64)=> (280, 280, 128)
-        second_encoder_layer = self.double_conv(128, first_encoder_layer, VALID, "SECOND_ENCODER_LAYER")
+        second_encoder_layer = self.conv_and_d_pool_step(128, first_encoder_layer, VALID, "SECOND_ENCODER_LAYER")
         # (140,140,128) =>  (68, 68, 256)
         third_encoder_layer = self.conv_and_d_pool_step(256, second_encoder_layer, VALID, "THIRD_ENCODER_LAYER")
         # (68,68,256) => ( 32, 32, 512)
@@ -38,7 +35,9 @@ class Unet(Model):
 
         output_layer = Conv2D( CLASS_NUMBER, (1,1), activation=ACTIVATION_FUNCTION,
                                kernel_initializer=KERNEL_INITIALIZER, padding=PADDING)(first_decoder_layer)
+        print(f"OUPUT shape after:\n {output_layer.shape}")
         return output_layer
+
 
 
 
@@ -79,13 +78,13 @@ class Unet(Model):
                               padding=PADDING)(convolution_layer)
         print(f"{name} shape after 2nd convolution: \n {output_layer.shape}")
         return output_layer
-    def call(self,inputs):
-        x= self.inputs(inputs)
-        return self.outputs(x)
-model = Unet()
-# model.compile()
-# model.summary()
-model.unet_model(INPUT)
 
 
-#     model = Model(inputs=[input], outputs=[output])
+    def model(self):
+        model=model = Model(inputs=[INPUT],outputs=[self.unet_model(INPUT)])
+        model.compile()
+        model.summary()
+
+
+
+
