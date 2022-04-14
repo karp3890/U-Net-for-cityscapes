@@ -7,4 +7,4 @@ class Input:
         self.class_number = class_number
 
 
-    def transform
+
