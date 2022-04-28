@@ -80,10 +80,16 @@ class Unet():
         return output_layer
 
 
-    def model(self):
+    def model(self,input_masks,input_img):
         model=model = Model(inputs=[INPUT],outputs=[self.unet_model(INPUT)])
-        model.compile()
+        model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=METRICS)
         model.summary()
+        model.fit(input_img,
+                  input_masks,
+                  batch_size=17,
+                  epochs=8
+        )
+
 
 
 
