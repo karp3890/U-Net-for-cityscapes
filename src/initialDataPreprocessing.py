@@ -11,7 +11,7 @@ def copy_json(base_path:str):
     print(f"JSON files has been copied to: {base_path}")
 def delete_png(base_path:str):
     base_path=os.path.join(base_path,"gtFine")
-    splits = ["test/", "train/", "val/"]
+    splits = ["test\\", "train\\", "val\\"]
     for split in tqdm(splits):
         split_path = os.path.join(base_path, split)
         cities = os.listdir(split_path)
@@ -27,7 +27,7 @@ def delete_png(base_path:str):
 
 def delete_json(base_path:str):
     base_path=os.path.join(base_path,"gtFine")
-    splits = ["test/", "train/", "val/"]
+    splits = ["test\\", "train\\", "val\\"]
     for split in tqdm(splits):
         split_path = os.path.join(base_path, split)
         cities = os.listdir(split_path)
@@ -43,11 +43,9 @@ def delete_json(base_path:str):
 
 
 def main(args):
-    delete_png(args.path)
     copy_json(args.path)
     createTrainIdLabelImgs.main(args.path)
     delete_json(args.path)
-
 
 
 if __name__ == "__main__":
